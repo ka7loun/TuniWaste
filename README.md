@@ -1,4 +1,4 @@
-﻿# ReCoDeWaste-Recyclable-vs-Non-Recyclable-Detection
+# Recyclability Percentage Detection using YOLO
 
 ## 📌 Project Overview
 
@@ -26,14 +26,32 @@ The main objectives of this project are:
 * **YOLO (You Only Look Once)** object detection framework
 * Optimized for real-time detection and high accuracy
 
-### 🔹 Dataset
+### 🔹 Dataset: ReCoDeWaste
 
-* **ReCoDeWaste Dataset**
-* Contains labeled images of various waste categories relevant to recycling and waste sorting
+This project is built upon the **ReCoDeWaste (Recycling Construction & Demolition Waste)** dataset, the first open-source **RGB-D dataset** specifically designed for multiwaste analysis in real-world recycling and material recovery scenarios.
 
-The dataset was used to train and evaluate the model for accurate waste detection and classification.
+**Key characteristics:**
 
----
+* **2,505 high-resolution RGB-D images** collected from active construction sites in Melbourne, Australia
+* **100,000+ manually annotated object instance masks**
+* Designed to capture **clutter, occlusion, deformation, and contamination**, reflecting real-world CDW streams
+* Released alongside a peer-reviewed publication in *Waste Management (2025)*
+
+Unlike traditional RGB-only datasets, ReCoDeWaste includes **depth information**, which enhances boundary detection, spatial understanding, and robustness in complex waste environments.
+
+### ♻️ Recyclable Classes
+
+The dataset includes six primary recyclable waste classes used by this model:
+
+* **Aggregates** – Concrete, rocks, stones, and bricks recycled as construction aggregates
+* **Cardboard** – Deformed cardboard packaging recycled into paperboard and cellulose fibre
+* **Hard Plastic (HDPE)** – Plumbing waste, containers, conduits, and rigid plastic materials
+* **Metal** – Copper, aluminium, steel, and iron with high recycling value
+* **Soft Plastic (LDPE)** – Plastic bags, wraps, and flexible packaging with high recyclability rates
+* **Timber** – Waste wood recycled into furnishings, panel boards, and biomass
+
+Each detected class contributes to the final recyclability score based on its recyclability potential.
+
 
 ## ⚙️ How It Works
 
@@ -106,8 +124,6 @@ The detected objects are used to compute the final recyclability score and gener
 
 ## 🤝 Acknowledgments
 
-* **IEEE SIGHT Tunisia Section**
-* **IEEE TSYP**
 * ReCoDeWaste Dataset contributors
 * Ultralytics YOLO community
 
@@ -121,7 +137,6 @@ This project is intended for educational and research purposes. Licensing detail
 
 ## 📬 Contact
 
-For questions, collaboration, or feedback, feel free to reach out.
+For questions, collaboration, or feedback, feel free to reach out through IEEE channels or GitHub issues.
 
 *Developed with a commitment to sustainability and humanitarian technology.* 🌱
-
