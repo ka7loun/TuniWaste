@@ -1,5 +1,4 @@
 ﻿# ReCoDeWaste-Recyclable-vs-Non-Recyclable-Detection
-# Recyclability Percentage Detection using YOLO
 
 ## 📌 Project Overview
 
@@ -125,3 +124,4 @@ This project is intended for educational and research purposes. Licensing detail
 For questions, collaboration, or feedback, feel free to reach out.
 
 *Developed with a commitment to sustainability and humanitarian technology.* 🌱
+
