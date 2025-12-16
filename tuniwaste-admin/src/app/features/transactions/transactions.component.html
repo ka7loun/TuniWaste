@@ -1,0 +1,81 @@
+<div class="transactions-container">
+  <div class="page-header">
+    <h2>Transaction Management</h2>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Stage:</label>
+      <select [(ngModel)]="filters.stage" (change)="applyFilters()">
+        <option value="">All Stages</option>
+        <option value="negotiation">Negotiation</option>
+        <option value="contract">Contract</option>
+        <option value="in-transit">In Transit</option>
+        <option value="delivered">Delivered</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Search:</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.search"
+        placeholder="Value..."
+        (keyup.enter)="applyFilters()"
+      />
+    </div>
+
+    <button class="btn-primary" (click)="applyFilters()">Apply Filters</button>
+    <button class="btn-secondary" (click)="clearFilters()">Clear</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading transactions...</div>
+
+  <div *ngIf="!loading" class="transactions-table-container">
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th>Listing</th>
+          <th>Category</th>
+          <th>Seller</th>
+          <th>Buyer</th>
+          <th>Value</th>
+          <th>Stage</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{ transaction.listingId?.title || 'N/A' }}</td>
+          <td>{{ transaction.listingId?.category || 'N/A' }}</td>
+          <td>{{ transaction.seller?.email || 'N/A' }}</td>
+          <td>{{ transaction.buyer?.email || 'N/A' }}</td>
+          <td>${{ transaction.value | number }}</td>
+          <td>
+            <span class="badge" [ngClass]="getStageBadgeClass(transaction.stage)">
+              {{ transaction.stage }}
+            </span>
+          </td>
+          <td>{{ transaction.createdAt | date: 'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="transactions.length === 0" class="empty-state">No transactions found</div>
+
+    <div *ngIf="pagination.pages > 1" class="pagination">
+      <button [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        Previous
+      </button>
+      <span>
+        Page {{ currentPage }} of {{ pagination.pages }} ({{ pagination.total }} total)
+      </span>
+      <button
+        [disabled]="currentPage === pagination.pages"
+        (click)="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

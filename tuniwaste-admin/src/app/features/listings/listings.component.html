@@ -1,0 +1,101 @@
+<div class="listings-container">
+  <div class="page-header">
+    <h2>Listing Management</h2>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Status:</label>
+      <select [(ngModel)]="filters.status" (change)="applyFilters()">
+        <option value="">All Statuses</option>
+        <option value="open">Open</option>
+        <option value="reserved">Reserved</option>
+        <option value="awarded">Awarded</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Category:</label>
+      <select [(ngModel)]="filters.category" (change)="applyFilters()">
+        <option value="">All Categories</option>
+        <option value="metals">Metals</option>
+        <option value="plastics">Plastics</option>
+        <option value="chemicals">Chemicals</option>
+        <option value="organics">Organics</option>
+        <option value="construction">Construction</option>
+        <option value="textiles">Textiles</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Search:</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.search"
+        placeholder="Title, material, location..."
+        (keyup.enter)="applyFilters()"
+      />
+    </div>
+
+    <button class="btn-primary" (click)="applyFilters()">Apply Filters</button>
+    <button class="btn-secondary" (click)="clearFilters()">Clear</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading listings...</div>
+
+  <div *ngIf="!loading" class="listings-table-container">
+    <table class="listings-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Quantity (tons)</th>
+          <th>Price/Ton</th>
+          <th>Location</th>
+          <th>Seller</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let listing of listings">
+          <td>{{ listing.title }}</td>
+          <td>{{ listing.category }}</td>
+          <td>{{ listing.quantityTons }}</td>
+          <td>${{ listing.pricePerTon }}</td>
+          <td>{{ listing.location }}</td>
+          <td>{{ listing.seller?.email || 'N/A' }}</td>
+          <td>
+            <span class="badge" [ngClass]="getStatusBadgeClass(listing.status)">
+              {{ listing.status }}
+            </span>
+          </td>
+          <td>{{ listing.createdAt | date: 'short' }}</td>
+          <td class="actions">
+            <button class="btn-small btn-danger" (click)="deleteListing(listing)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="listings.length === 0" class="empty-state">No listings found</div>
+
+    <div *ngIf="pagination.pages > 1" class="pagination">
+      <button [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        Previous
+      </button>
+      <span>
+        Page {{ currentPage }} of {{ pagination.pages }} ({{ pagination.total }} total)
+      </span>
+      <button
+        [disabled]="currentPage === pagination.pages"
+        (click)="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

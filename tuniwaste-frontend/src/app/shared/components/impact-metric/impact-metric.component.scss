@@ -1,0 +1,46 @@
+.impact {
+  min-width: 200px;
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--tw-text-light);
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+  }
+
+  strong {
+    font-size: 1.8rem;
+    display: block;
+    margin: 0.5rem 0;
+    color: var(--tw-text);
+  }
+
+  span {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    text-transform: lowercase;
+
+    &.up {
+      background: rgba(3, 204, 136, 0.15);
+      color: var(--tw-emerald);
+    }
+
+    &.down {
+      background: rgba(255, 138, 128, 0.2);
+      color: #ff8a80;
+    }
+
+    &.flat {
+      background: var(--tw-bg-hover);
+      color: var(--tw-text-muted);
+    }
+  }
+
+  small {
+    color: var(--tw-text-light);
+  }
+}
+

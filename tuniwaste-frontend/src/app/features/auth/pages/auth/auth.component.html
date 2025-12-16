@@ -1,0 +1,157 @@
+<section class="auth-container">
+  <div class="auth-wrapper">
+    <div class="auth-intro">
+      <div class="intro-content">
+        <div class="logo-section">
+          <img src="assets/tunilogo.png" alt="TuniWaste" class="intro-logo" />
+          <h1>Welcome to TuniWaste</h1>
+        </div>
+        <p class="intro-text">
+          Join Tunisia's trusted B2B marketplace for industrial waste trading.
+          Connect sellers with buyers and recyclers in a secure, compliant environment.
+        </p>
+        <div class="intro-features">
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span>KYC & Compliance Verification</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span>Secure Document Vault</span>
+          </div>
+          <div class="feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>AI-Powered Matching</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-form-wrapper">
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()">
+        <div class="form-header">
+          <div class="mode-switch">
+            <button
+              type="button"
+              [class.active]="mode === 'login'"
+              (click)="switchMode('login')"
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              [class.active]="mode === 'register'"
+              (click)="switchMode('register')"
+            >
+              Register
+            </button>
+          </div>
+        </div>
+
+        <div class="role-selection">
+          <label class="role-label">
+            <strong>I am a</strong>
+            <small>Choose your role to access the right features</small>
+          </label>
+          <div class="role-grid">
+            <label
+              *ngFor="let role of (roles | keyvalue)"
+              class="role-option"
+              [class.active]="form.value.role === role.key"
+            >
+              <input type="radio" formControlName="role" [value]="role.key" />
+              <div class="role-content">
+                <strong>{{ role.value }}</strong>
+                <small *ngIf="role.key === 'generator'">I want to sell waste materials</small>
+                <small *ngIf="role.key === 'buyer'">I want to buy/recycle waste materials</small>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-fields">
+          <div class="field-group" *ngIf="mode === 'register'">
+            <label>
+              <span>Company Name</span>
+              <input
+                type="text"
+                formControlName="company"
+                placeholder="e.g. Atlas Cement"
+                [class.error]="form.get('company')?.touched && form.get('company')?.invalid"
+              />
+              <span class="field-error" *ngIf="form.get('company')?.touched && form.get('company')?.invalid">
+                Company name is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group" *ngIf="mode === 'register'">
+            <label>
+              <span>Primary Contact</span>
+              <input
+                type="text"
+                formControlName="contact"
+                placeholder="Full name"
+                [class.error]="form.get('contact')?.touched && form.get('contact')?.invalid"
+              />
+              <span class="field-error" *ngIf="form.get('contact')?.touched && form.get('contact')?.invalid">
+                Contact person is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span>Email Address</span>
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="you@company.tn"
+                [class.error]="form.get('email')?.touched && form.get('email')?.invalid"
+              />
+              <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+                Please enter a valid email address
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span>Password</span>
+              <input
+                type="password"
+                formControlName="password"
+                placeholder="••••••••"
+                [class.error]="form.get('password')?.touched && form.get('password')?.invalid"
+              />
+              <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+                Password must be at least 6 characters
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="pending">
+          <span *ngIf="!pending">{{ mode === 'login' ? 'Sign In' : 'Create Account' }}</span>
+          <span *ngIf="pending">Processing...</span>
+        </button>
+
+        <p class="status-message" *ngIf="statusMessage" [class.success]="statusMessage.includes('Welcome') || statusMessage.includes('created')">
+          {{ statusMessage }}
+        </p>
+
+        <p class="form-footer">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>

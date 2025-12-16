@@ -1,0 +1,130 @@
+<section class="profile-page">
+  <div class="page-header">
+    <h1>Profile</h1>
+    <p class="subtitle">Manage your company information and account settings</p>
+  </div>
+
+  <div class="profile-content">
+    <div class="content-main">
+      <section class="profile-form card">
+        <div class="section-header">
+          <h2>Company Information</h2>
+          <p class="section-description">Update your company details and contact information</p>
+        </div>
+
+        <form [formGroup]="profileForm" class="form-grid">
+          <div class="form-group">
+            <label>
+              <span>Company Name</span>
+              <input formControlName="company" placeholder="Your company name" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <span>Primary Contact</span>
+              <input formControlName="contact" placeholder="Full name" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <span>Email Address</span>
+              <input formControlName="email" type="email" placeholder="company@example.tn" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <span>Phone Number</span>
+              <input formControlName="phone" placeholder="+216 XX XXX XXX" />
+            </label>
+          </div>
+
+          <div class="form-group full-width">
+            <label>
+              <span>Account Role</span>
+              <input formControlName="role" [disabled]="true" />
+              <small class="field-hint">Role cannot be changed after registration</small>
+            </label>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="notifications" />
+              <span>Receive bid & compliance alerts via email</span>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="save-button" (click)="save()">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="transactions-section card">
+        <div class="section-header">
+          <h2>Recent Transactions</h2>
+          <p class="section-description">Your transaction history</p>
+        </div>
+        <div class="transactions-list" *ngIf="transactions$ | async as transactions">
+          <div *ngIf="transactions.length === 0" class="empty-state">
+            <p>No transactions yet</p>
+          </div>
+          <div class="transaction-item" *ngFor="let transaction of transactions">
+            <div class="transaction-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="2" x2="12" y2="22"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <div class="transaction-details">
+              <strong>{{ transaction.listingTitle }}</strong>
+              <p>{{ transaction.counterparty }} · <span class="status-badge" [class]="'status-' + transaction.stage.toLowerCase()">{{ transaction.stage }}</span></p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="verification-section card">
+      <div class="section-header">
+        <h2>Verification Status</h2>
+      </div>
+      <div class="verification-content" *ngIf="user$ | async as user">
+        <div class="status-badge-large" [class.verified]="user.verified" [class.pending]="!user.verified">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path *ngIf="user.verified" d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline *ngIf="user.verified" points="22 4 12 14.01 9 11.01"/>
+            <circle *ngIf="!user.verified" cx="12" cy="12" r="10"/>
+            <line *ngIf="!user.verified" x1="12" y1="8" x2="12" y2="12"/>
+            <line *ngIf="!user.verified" x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span>{{ user.verified ? 'Verified' : 'Pending KYC' }}</span>
+        </div>
+        <div class="verification-details">
+          <div class="detail-item">
+            <span class="detail-label">Role</span>
+            <span class="detail-value">{{ user.role === 'generator' ? 'Seller' : 'Buyer' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email</span>
+            <span class="detail-value">{{ user.email }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Company</span>
+            <span class="detail-value">{{ user.company }}</span>
+          </div>
+        </div>
+        <a routerLink="/verification" class="update-link" *ngIf="!user.verified">
+          Complete Verification
+        </a>
+        <a routerLink="/verification" class="update-link" *ngIf="user.verified">
+          Update Compliance Info
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>

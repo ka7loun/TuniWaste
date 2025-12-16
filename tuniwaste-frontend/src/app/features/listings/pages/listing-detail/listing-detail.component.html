@@ -1,0 +1,114 @@
+<section class="listing-detail-page" *ngIf="listing$ | async as listing; else loading">
+  <div class="page-header">
+    <a routerLink="/listings" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Listings
+    </a>
+    <div class="header-actions" *ngIf="isOwner$ | async">
+      <a [routerLink]="['/listings', listing.id, 'edit']" class="btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit
+      </a>
+      <button (click)="deleteListing(listing.id)" class="btn-danger">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <div class="listing-grid">
+    <div class="main-content">
+      <div class="listing-image">
+        <img [src]="listing.thumbnail" [alt]="listing.title" />
+        <div class="status-badge" [class]="'status-' + listing.status">
+          {{ listing.status | titlecase }}
+        </div>
+      </div>
+
+      <div class="listing-info card">
+        <div class="info-header">
+          <span class="category-pill">{{ listing.category | titlecase }}</span>
+          <h1>{{ listing.title }}</h1>
+          <p class="listing-meta">
+            <span>Posted by <strong>{{ listing.seller }}</strong></span>
+            <span>·</span>
+            <span>Available from {{ listing.availableFrom | date }}</span>
+          </p>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Quantity</label>
+            <p>{{ listing.quantityTons }} tons</p>
+          </div>
+          <div class="info-item">
+            <label>Price</label>
+            <p>{{ listing.pricePerTon | currency:'TND' }}/ton</p>
+          </div>
+          <div class="info-item">
+            <label>Material</label>
+            <p>{{ listing.material }}</p>
+          </div>
+        </div>
+
+        <div class="description-section">
+          <h3>Pickup Requirements</h3>
+          <p>{{ listing.pickupRequirements || 'No specific requirements.' }}</p>
+        </div>
+
+        <div class="documents-section" *ngIf="listing.documents && listing.documents.length > 0">
+          <h3>Documents</h3>
+          <div class="doc-list">
+            <div class="doc-item" *ngFor="let doc of listing.documents">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span>{{ doc }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="action-card card" *ngIf="isBuyer$ | async">
+        <h3>Interested in this material?</h3>
+        <p>Place a bid to start negotiations with the seller.</p>
+        <div class="price-summary">
+          <div class="row">
+            <span>Asking Price</span>
+            <strong>{{ listing.pricePerTon | currency:'TND' }}/ton</strong>
+          </div>
+          <div class="row total">
+            <span>Total Value (est.)</span>
+            <strong>{{ listing.pricePerTon * listing.quantityTons | currency:'TND' }}</strong>
+          </div>
+        </div>
+        <a [routerLink]="['/bidding']" [queryParams]="{listingId: listing.id}" class="btn-primary full-width">
+          Place Bid
+        </a>
+      </div>
+
+    </aside>
+  </div>
+</section>
+
+<ng-template #loading>
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading listing details...</p>
+  </div>
+</ng-template>
+

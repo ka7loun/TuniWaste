@@ -1,0 +1,128 @@
+<section class="listings-page">
+  <!-- Seller View: My Listings -->
+  <div *ngIf="isSeller$ | async" class="seller-listings">
+    <div class="page-header">
+      <div class="header-content">
+        <div>
+          <h1>My Listings</h1>
+          <p class="subtitle">Manage your waste material listings</p>
+        </div>
+        <a routerLink="/listings/create" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Create New Listing</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="listings-content">
+      <div *ngIf="loading" class="listings-grid">
+        <app-loading-skeleton type="card" [count]="6"></app-loading-skeleton>
+      </div>
+      <ng-container *ngIf="!loading">
+        <div *ngIf="myListings$ | async as listings">
+          <div *ngIf="listings.length === 0" class="empty-state">
+            <div class="empty-content">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 9h6v6H9z"/>
+              </svg>
+              <h3>No listings yet</h3>
+              <p>Start by creating your first waste material listing</p>
+              <a routerLink="/listings/create" class="btn-primary">Create Listing</a>
+            </div>
+          </div>
+          <div class="listings-grid" *ngIf="listings.length > 0">
+            <app-listing-card
+              *ngFor="let listing of listings"
+              [listing]="listing"
+            ></app-listing-card>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Buyer View: Browse Listings -->
+  <div *ngIf="isBuyer$ | async" class="buyer-listings">
+    <div class="page-header">
+      <h1>Browse Listings</h1>
+      <p class="subtitle">Discover available waste materials for purchase</p>
+    </div>
+
+    <form [formGroup]="filters" class="filters-panel">
+      <div class="filter-group">
+        <label>
+          <span>Material Category</span>
+          <select formControlName="category">
+            <option value="all">All Categories</option>
+            <option *ngFor="let category of categories.slice(1)" [value]="category">
+              {{ category | titlecase }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="filter-group">
+        <label>
+          <span>Minimum Quantity (tons)</span>
+          <input 
+            type="number" 
+            formControlName="minQuantity" 
+            min="0"
+            placeholder="0"
+          />
+        </label>
+      </div>
+    </form>
+
+    <div class="listings-content">
+      <div *ngIf="loading" class="listings-layout">
+        <div class="listings-main">
+          <div class="listings-grid">
+            <app-loading-skeleton type="card" [count]="6"></app-loading-skeleton>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="!loading">
+        <div *ngIf="availableListings$ | async as listings">
+          <div class="results-header">
+            <p class="results-count">{{ listings.length }} listing{{ listings.length !== 1 ? 's' : '' }} found</p>
+          </div>
+          
+          <div class="listings-layout">
+            <div class="listings-main">
+              <div *ngIf="listings.length === 0" class="empty-state">
+                <div class="empty-content">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <h3>No listings match your filters</h3>
+                  <p>Try adjusting your search criteria</p>
+                </div>
+              </div>
+              <div class="listings-grid" *ngIf="listings.length > 0">
+                <app-listing-card
+                  *ngFor="let listing of listings"
+                  [listing]="listing"
+                ></app-listing-card>
+              </div>
+            </div>
+            
+            <aside class="listings-map" *ngIf="mapPins$ | async as pins">
+              <app-map-panel 
+                [pins]="pins" 
+                title="Listing Locations" 
+                eyebrow="Map View"
+              ></app-map-panel>
+            </aside>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+

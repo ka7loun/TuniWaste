@@ -1,0 +1,354 @@
+<section class="verification-container">
+  <div class="verification-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <img src="assets/tunilogo.png" alt="TuniWaste" class="header-logo" />
+        <div>
+          <h1>Complete Your Verification</h1>
+          <p class="subtitle">Verify your business to start trading on TuniWaste</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="verification-content">
+    <div class="progress-section">
+      <div class="progress-steps">
+        <div class="step-item" [class.active]="step === 1" [class.completed]="step > 1">
+          <div class="step-number">
+            <span *ngIf="step > 1">✓</span>
+            <span *ngIf="step <= 1">1</span>
+          </div>
+          <div class="step-info">
+            <h3>Company Information</h3>
+            <p>Legal entity details</p>
+          </div>
+        </div>
+        <div class="step-connector" [class.completed]="step > 1"></div>
+        <div class="step-item" [class.active]="step === 2" [class.completed]="step > 2">
+          <div class="step-number">
+            <span *ngIf="step > 2">✓</span>
+            <span *ngIf="step <= 2">2</span>
+          </div>
+          <div class="step-info">
+            <h3>Compliance Details</h3>
+            <p>Material handling & certifications</p>
+          </div>
+        </div>
+        <div class="step-connector" [class.completed]="step > 2"></div>
+        <div class="step-item" [class.active]="step === 3" [class.completed]="step > 3">
+          <div class="step-number">
+            <span *ngIf="step > 3">✓</span>
+            <span *ngIf="step <= 3">3</span>
+          </div>
+          <div class="step-info">
+            <h3>Documents & Contacts</h3>
+            <p>Upload files & authorized personnel</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <!-- Step 1: Company Information -->
+      <form *ngIf="step === 1" [formGroup]="companyForm" class="verification-form">
+        <div class="form-header">
+          <h2>Company Information</h2>
+          <p>Provide your company's legal registration details</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label>
+              <span class="label-text">Legal Company Name</span>
+              <input
+                type="text"
+                formControlName="legalName"
+                placeholder="Enter registered company name"
+                [class.error]="companyForm.get('legalName')?.touched && companyForm.get('legalName')?.invalid"
+              />
+              <span class="field-error" *ngIf="companyForm.get('legalName')?.touched && companyForm.get('legalName')?.invalid">
+                Company name is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Registration Number</span>
+              <input
+                type="text"
+                formControlName="registrationNumber"
+                placeholder="RNE / RC number"
+                [class.error]="companyForm.get('registrationNumber')?.touched && companyForm.get('registrationNumber')?.invalid"
+              />
+              <span class="field-error" *ngIf="companyForm.get('registrationNumber')?.touched && companyForm.get('registrationNumber')?.invalid">
+                Registration number is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Tax Identification Number</span>
+              <input
+                type="text"
+                formControlName="taxId"
+                placeholder="TIN / NIF"
+                [class.error]="companyForm.get('taxId')?.touched && companyForm.get('taxId')?.invalid"
+              />
+              <span class="field-error" *ngIf="companyForm.get('taxId')?.touched && companyForm.get('taxId')?.invalid">
+                Tax ID is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Industry Sector</span>
+              <select
+                formControlName="industry"
+                [class.error]="companyForm.get('industry')?.touched && companyForm.get('industry')?.invalid"
+              >
+                <option value="" disabled>Select your industry</option>
+                <option *ngFor="let industry of industryOptions" [value]="industry">
+                  {{ industry }}
+                </option>
+              </select>
+              <span class="field-error" *ngIf="companyForm.get('industry')?.touched && companyForm.get('industry')?.invalid">
+                Please select an industry
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Headquarters City</span>
+              <input
+                type="text"
+                formControlName="hqCity"
+                placeholder="e.g. Tunis, Sfax, Sousse"
+                [class.error]="companyForm.get('hqCity')?.touched && companyForm.get('hqCity')?.invalid"
+              />
+              <span class="field-error" *ngIf="companyForm.get('hqCity')?.touched && companyForm.get('hqCity')?.invalid">
+                City is required
+              </span>
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <!-- Step 2: Compliance Details -->
+      <form *ngIf="step === 2" [formGroup]="complianceForm" class="verification-form">
+        <div class="form-header">
+          <h2>Compliance & Operations</h2>
+          <p>Tell us about your waste handling and certifications</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field-group full-width">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="handlesHazmat" />
+              <span class="checkbox-text">
+                <strong>We handle hazardous waste streams</strong>
+                <small>Check if your company processes or generates hazardous materials</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Annual Waste Volume</span>
+              <input
+                type="number"
+                formControlName="annualWaste"
+                placeholder="e.g. 1200"
+                [class.error]="complianceForm.get('annualWaste')?.touched && complianceForm.get('annualWaste')?.invalid"
+              />
+              <span class="field-hint">Enter estimated annual waste in tons</span>
+              <span class="field-error" *ngIf="complianceForm.get('annualWaste')?.touched && complianceForm.get('annualWaste')?.invalid">
+                Annual waste volume is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="section-label">Certifications & Standards</label>
+            <p class="section-description">Upload your certification documents (PDF, JPG, PNG)</p>
+            <label class="file-upload-label">
+              <span>Upload Certification Documents</span>
+              <input 
+                type="file" 
+                (change)="onCertificationFiles($any($event.target).files)" 
+                multiple 
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <div class="file-upload-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+                <span>Click to upload or drag and drop</span>
+                <small>PDF, JPG, PNG up to 10MB each</small>
+              </div>
+            </label>
+
+            <div class="uploads-list" *ngIf="certificationUploads.length > 0">
+              <div class="upload-item" *ngFor="let upload of certificationUploads">
+                <div class="upload-info">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                  </svg>
+                  <span>{{ upload.fileName }}</span>
+                </div>
+                <div class="upload-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" [style.width.%]="upload.progress"></div>
+                  </div>
+                  <span class="progress-text">{{ upload.progress | number: '1.0-0' }}%</span>
+                  <span class="upload-status" *ngIf="upload.completed">✓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Step 3: Documents & Contacts -->
+      <form *ngIf="step === 3" [formGroup]="contactsForm" class="verification-form">
+        <div class="form-header">
+          <h2>Authorized Contacts & Documents</h2>
+          <p>Provide compliance officer details and upload required documents</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="field-group">
+            <label>
+              <span class="label-text">Compliance Officer Name</span>
+              <input
+                type="text"
+                formControlName="complianceOfficer"
+                placeholder="Full name"
+                [class.error]="contactsForm.get('complianceOfficer')?.touched && contactsForm.get('complianceOfficer')?.invalid"
+              />
+              <span class="field-error" *ngIf="contactsForm.get('complianceOfficer')?.touched && contactsForm.get('complianceOfficer')?.invalid">
+                Compliance officer name is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Phone Number</span>
+              <input
+                type="tel"
+                formControlName="phone"
+                placeholder="+216 XX XXX XXX"
+                [class.error]="contactsForm.get('phone')?.touched && contactsForm.get('phone')?.invalid"
+              />
+              <span class="field-error" *ngIf="contactsForm.get('phone')?.touched && contactsForm.get('phone')?.invalid">
+                Phone number is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group">
+            <label>
+              <span class="label-text">Email Address</span>
+              <input
+                type="email"
+                formControlName="email"
+                placeholder="officer@company.tn"
+                [class.error]="contactsForm.get('email')?.touched && contactsForm.get('email')?.invalid"
+              />
+              <span class="field-error" *ngIf="contactsForm.get('email')?.touched && contactsForm.get('email')?.invalid">
+                Valid email address is required
+              </span>
+            </label>
+          </div>
+
+          <div class="field-group full-width">
+            <label class="file-upload-label">
+              <span class="label-text">Upload KYC Documents</span>
+              <div class="file-upload-area">
+                <input
+                  type="file"
+                  (change)="onDocumentInput($event)"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  id="document-upload"
+                />
+                <div class="upload-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  <p><strong>Click to upload</strong> or drag and drop</p>
+                  <small>PDF, JPG, PNG (max 10MB each)</small>
+                </div>
+              </div>
+              <span class="field-hint">Upload company registration, ISO certificates, insurance documents</span>
+            </label>
+
+            <div class="uploads-list" *ngIf="uploads.length > 0">
+              <div class="upload-item" *ngFor="let upload of uploads">
+                <div class="upload-info">
+                  <span class="upload-name">{{ upload.fileName }}</span>
+                  <span class="upload-progress">{{ upload.progress | number: '1.0-0' }}%</span>
+                </div>
+                <div class="upload-bar">
+                  <div class="upload-bar-fill" [style.width.%]="upload.progress"></div>
+                </div>
+                <span class="upload-status" *ngIf="upload.completed">✓ Complete</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="toggleStep('previous')"
+        [disabled]="step === 1"
+      >
+        Previous
+      </button>
+      <button
+        type="button"
+        class="btn-primary"
+        *ngIf="step < 3"
+        (click)="toggleStep('next')"
+        [disabled]="(step === 1 && companyForm.invalid) || (step === 2 && complianceForm.invalid)"
+      >
+        Continue
+      </button>
+      <button
+        type="button"
+        class="btn-primary"
+        *ngIf="step === 3"
+        (click)="submit()"
+        [disabled]="contactsForm.invalid || submitted"
+      >
+        <span *ngIf="!submitted">Complete Verification</span>
+        <span *ngIf="submitted">Processing...</span>
+      </button>
+    </div>
+
+    <div class="success-message" *ngIf="submitted">
+      <div class="success-content">
+        <div class="success-icon">✓</div>
+        <h3>Verification Submitted Successfully!</h3>
+        <p>Your KYC package has been submitted. You'll be redirected to your dashboard shortly.</p>
+      </div>
+    </div>
+  </div>
+</section>

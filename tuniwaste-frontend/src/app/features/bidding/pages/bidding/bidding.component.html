@@ -1,0 +1,133 @@
+<section class="bidding-page">
+  <!-- Seller View: See bids received on their listings -->
+  <div *ngIf="isSeller$ | async" class="seller-bidding">
+    <div class="page-header">
+      <h1>Bids Received</h1>
+      <p class="subtitle">Manage bids on your waste listings</p>
+    </div>
+
+    <div class="bids-content">
+      <div class="bids-list" *ngIf="bidsOnMyListings$ | async as bids">
+        <div *ngIf="bids.length === 0" class="empty-state">
+          <p>No bids received yet on your listings</p>
+          <a routerLink="/listings/create" class="btn-link">Create a listing to receive bids</a>
+        </div>
+        
+        <div class="bid-card" *ngFor="let bid of bids">
+          <div class="bid-header">
+            <div class="bid-info">
+              <h3>{{ bid.listingTitle }}</h3>
+              <p>Bid from <strong>{{ bid.bidder }}</strong></p>
+            </div>
+            <span class="bid-status" [class]="'status-' + bid.status">{{ bid.status }}</span>
+          </div>
+          <div class="bid-details">
+            <div class="bid-amount">
+              <span class="label">Bid Amount</span>
+              <span class="value">{{ bid.amount | currency: 'TND' }}/ton</span>
+            </div>
+            <div class="bid-time">
+              <span class="label">Submitted</span>
+              <span class="value">{{ bid.timestamp | date: 'short' }}</span>
+            </div>
+          </div>
+          <div class="bid-actions">
+            <button class="btn-accept" (click)="acceptBid(bid.id)">Accept</button>
+            <button class="btn-decline" (click)="declineBid(bid.id)">Decline</button>
+            <a [routerLink]="['/listings', bid.listingId]" class="btn-link">View Listing</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Buyer View: Place bids on listings -->
+  <div *ngIf="isBuyer$ | async" class="buyer-bidding">
+    <div class="page-header">
+      <h1>Place a Bid</h1>
+      <p class="subtitle">Submit competitive bids on available waste listings</p>
+    </div>
+
+    <div class="bidding-layout">
+      <form [formGroup]="bidForm" class="bid-form" (ngSubmit)="submit()">
+        <h2>New Bid</h2>
+        
+        <div class="form-group">
+          <label>
+            <span>Select Listing</span>
+            <select formControlName="listingId" [class.error]="bidForm.get('listingId')?.touched && bidForm.get('listingId')?.invalid">
+              <option value="" disabled>Choose a listing</option>
+              <option
+                *ngFor="let listing of (listings$ | async) ?? []"
+                [value]="listing.id"
+                [disabled]="listing.status !== 'open'"
+              >
+                {{ listing.title }} · {{ listing.quantityTons }}t · {{ listing.pricePerTon | currency: 'TND' }}/ton
+                <span *ngIf="listing.status !== 'open'">({{ listing.status }})</span>
+              </option>
+            </select>
+            <span class="field-error" *ngIf="bidForm.get('listingId')?.touched && bidForm.get('listingId')?.invalid">
+              Please select a listing
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group" *ngIf="selectedListing$ | async as selectedListing">
+          <div class="listing-preview">
+            <div class="preview-header">
+              <strong>{{ selectedListing.title }}</strong>
+              <span class="preview-badge">{{ selectedListing.quantityTons }} tons</span>
+            </div>
+            <p class="preview-details">
+              <span>{{ selectedListing.location }}</span>
+              <span>·</span>
+              <span>Current price: {{ selectedListing.pricePerTon | currency: 'TND' }}/ton</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Your Bid Amount (TND per ton)</span>
+            <input 
+              type="number" 
+              formControlName="amount" 
+              min="1"
+              placeholder="Enter bid amount"
+              [class.error]="bidForm.get('amount')?.touched && bidForm.get('amount')?.invalid"
+            />
+            <span class="field-hint">Enter your bid amount in Tunisian Dinars per ton</span>
+            <span class="field-error" *ngIf="bidForm.get('amount')?.touched && bidForm.get('amount')?.invalid">
+              Please enter a valid bid amount
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="bidForm.invalid">
+          Submit Bid
+        </button>
+      </form>
+
+      <div class="my-bids-section">
+        <div class="section-header">
+          <h2>My Bids</h2>
+        </div>
+        <div class="bids-list" *ngIf="myBids$ | async as bids">
+          <div *ngIf="bids.length === 0" class="empty-state">
+            <p>You haven't placed any bids yet</p>
+          </div>
+          <div class="bid-item" *ngFor="let bid of bids">
+            <div class="bid-item-header">
+              <strong>{{ bid.listingTitle }}</strong>
+              <span class="bid-status" [class]="'status-' + bid.status">{{ bid.status }}</span>
+            </div>
+            <div class="bid-item-details">
+              <span class="bid-amount">{{ bid.amount | currency: 'TND' }}/ton</span>
+              <span class="bid-time">{{ bid.timestamp | date: 'short' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

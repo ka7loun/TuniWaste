@@ -1,0 +1,30 @@
+<section class="map-panel card">
+  <header>
+    <div>
+      <p class="eyebrow">{{ eyebrow }}</p>
+      <h3>{{ title }}</h3>
+    </div>
+    <input
+      type="search"
+      placeholder="Search city or hub"
+      [formControl]="searchControl"
+      aria-label="Search facilities"
+    />
+  </header>
+
+  <div class="map-body" *ngIf="facilities$ | async as facilities">
+    <div class="map-visual">
+      <div class="pin" *ngFor="let facility of facilities">
+        <span class="pulse"></span>
+        <strong>{{ facility.name }}</strong>
+        <small>{{ facility.capacity }}</small>
+      </div>
+    </div>
+    <div class="facility-list">
+      <div *ngFor="let facility of facilities">
+        <p>{{ facility.name }}</p>
+        <small>Status: {{ facility.status }} · Capacity: {{ facility.capacity }}</small>
+      </div>
+    </div>
+  </div>
+</section>

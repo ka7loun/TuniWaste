@@ -1,0 +1,129 @@
+<section class="transactions-page">
+  <div class="page-header">
+    <h1>Transactions</h1>
+    <p class="subtitle">Manage your active and completed transactions</p>
+  </div>
+
+  <div class="transactions-content">
+    <!-- Active Transactions -->
+    <div class="transactions-section">
+      <div class="section-header">
+        <h2>Active Transactions</h2>
+        <p class="section-description">Transactions in progress</p>
+      </div>
+
+      <div class="transactions-list" *ngIf="activeTransactions$ | async as transactions">
+        <div *ngIf="transactions.length === 0" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="2" x2="12" y2="22"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <p>No active transactions</p>
+          <p class="empty-hint">Transactions will appear here once a bid is accepted</p>
+        </div>
+
+        <div class="transaction-card" *ngFor="let transaction of transactions">
+          <div class="transaction-header">
+            <div class="transaction-info">
+              <h3>{{ transaction.listingTitle }}</h3>
+              <p class="counterparty">With <strong>{{ transaction.counterparty }}</strong></p>
+            </div>
+            <div class="transaction-status" [class]="'status-' + transaction.stage">
+              <span class="status-dot"></span>
+              <span class="status-label">{{ getStageLabel(transaction.stage) }}</span>
+            </div>
+          </div>
+
+          <div class="transaction-details">
+            <div class="detail-item">
+              <span class="detail-label">Value</span>
+              <span class="detail-value">{{ transaction.value | currency: 'TND' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Last Updated</span>
+              <span class="detail-value">{{ transaction.updatedAt | date: 'short' }}</span>
+            </div>
+            <div class="detail-item" *ngIf="transaction.documents.length > 0">
+              <span class="detail-label">Documents</span>
+              <span class="detail-value">{{ transaction.documents.length }} file(s)</span>
+            </div>
+          </div>
+
+          <div class="transaction-progress">
+            <div class="progress-steps">
+              <div class="step" [class.active]="transaction.stage === 'negotiation'" [class.completed]="['in-transit', 'delivered'].includes(transaction.stage)">
+                <span class="step-number">1</span>
+                <span class="step-label">Negotiation</span>
+              </div>
+              <div class="step" [class.active]="transaction.stage === 'in-transit'" [class.completed]="transaction.stage === 'delivered'">
+                <span class="step-number">2</span>
+                <span class="step-label">In Transit</span>
+              </div>
+              <div class="step" [class.active]="transaction.stage === 'delivered'" [class.completed]="transaction.stage === 'delivered'">
+                <span class="step-number">3</span>
+                <span class="step-label">Delivered</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="transaction-actions">
+            <button class="btn-secondary" (click)="messageCounterparty(transaction)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Message
+            </button>
+            <button class="btn-primary" (click)="updateStage(transaction)" *ngIf="getNextStage(transaction.stage)">
+              Move to {{ getStageLabel(getNextStage(transaction.stage)!) }}
+            </button>
+            <button class="btn-link" (click)="viewDetails(transaction)">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completed Transactions -->
+    <div class="transactions-section">
+      <div class="section-header">
+        <h2>Completed Transactions</h2>
+        <p class="section-description">Successfully completed transactions</p>
+      </div>
+
+      <div class="transactions-list" *ngIf="completedTransactions$ | async as transactions">
+        <div *ngIf="transactions.length === 0" class="empty-state">
+          <p>No completed transactions yet</p>
+        </div>
+
+        <div class="transaction-card completed" *ngFor="let transaction of transactions">
+          <div class="transaction-header">
+            <div class="transaction-info">
+              <h3>{{ transaction.listingTitle }}</h3>
+              <p class="counterparty">With <strong>{{ transaction.counterparty }}</strong></p>
+            </div>
+            <div class="transaction-status status-delivered">
+              <span class="status-dot"></span>
+              <span class="status-label">Completed</span>
+            </div>
+          </div>
+
+          <div class="transaction-details">
+            <div class="detail-item">
+              <span class="detail-label">Value</span>
+              <span class="detail-value">{{ transaction.value | currency: 'TND' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Completed</span>
+              <span class="detail-value">{{ transaction.updatedAt | date: 'short' }}</span>
+            </div>
+          </div>
+
+          <div class="transaction-actions">
+            <button class="btn-link" (click)="viewDetails(transaction)">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+

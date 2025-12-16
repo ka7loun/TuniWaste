@@ -1,0 +1,22 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<app-top-nav [links]="navLinks$ | async" />
+<app-toast />
+<main id="main-content" class="app-shell" role="main">
+  <router-outlet />
+</main>
+<footer class="app-footer">
+  <div class="footer-content">
+    <div>
+      <p class="label">TuniWaste</p>
+      <small>Trusted AI marketplace for industrial circularity.</small>
+    </div>
+    <div class="footer-links">
+      <a routerLink="/dashboard">Platform</a>
+      <a routerLink="/analytics">Impact</a>
+      <a routerLink="/profile">Profile</a>
+      <a routerLink="/auth">Support</a>
+    </div>
+    <p class="copyright">© {{ currentYear }} TuniWaste</p>
+  </div>
+</footer>
+

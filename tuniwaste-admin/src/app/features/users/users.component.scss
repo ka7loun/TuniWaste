@@ -1,0 +1,250 @@
+.users-container {
+  .page-header {
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+  }
+
+  .filters-section {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #4a5568;
+      }
+
+      select,
+      input {
+        padding: 8px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 14px;
+        min-width: 150px;
+
+        &:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+      }
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+
+      &:hover {
+        background: #5568d3;
+      }
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+
+      &:hover {
+        background: #cbd5e0;
+      }
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #718096;
+  }
+}
+
+.users-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background: #f7fafc;
+
+    th {
+      padding: 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  tbody {
+    tr {
+      border-top: 1px solid #e2e8f0;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #f7fafc;
+      }
+
+      td {
+        padding: 16px;
+        font-size: 14px;
+        color: #2d3748;
+      }
+    }
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &.badge-generator {
+      background: #bee3f8;
+      color: #2c5282;
+    }
+
+    &.badge-buyer {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+
+    &.badge-admin {
+      background: #fed7d7;
+      color: #742a2a;
+    }
+
+    &.badge-success {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+
+    &.badge-warning {
+      background: #feebc8;
+      color: #7c2d12;
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    .btn-small {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &.btn-success {
+        background: #48bb78;
+        color: white;
+
+        &:hover {
+          background: #38a169;
+        }
+      }
+
+      &.btn-warning {
+        background: #ed8936;
+        color: white;
+
+        &:hover {
+          background: #dd6b20;
+        }
+      }
+
+      &.btn-danger {
+        background: #f56565;
+        color: white;
+
+        &:hover {
+          background: #e53e3e;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #718096;
+}
+
+.pagination {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e2e8f0;
+
+  button {
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: #5568d3;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    color: #718096;
+    font-size: 14px;
+  }
+}

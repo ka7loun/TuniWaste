@@ -1,0 +1,267 @@
+<section class="create-listing-page">
+  <div class="page-header">
+    <h1>Create New Listing</h1>
+    <p class="subtitle">List your waste materials for buyers to discover</p>
+  </div>
+
+  <form [formGroup]="form" class="listing-form" (ngSubmit)="submit()">
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Basic Information</h2>
+        <p class="section-description">Provide details about your waste material</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>
+            <span>Listing Title *</span>
+            <input 
+              formControlName="title" 
+              placeholder="e.g. High-grade copper scrap"
+              [class.error]="form.get('title')?.touched && form.get('title')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+              Title is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Material Description *</span>
+            <input 
+              formControlName="material" 
+              placeholder="What is the waste stream?"
+              [class.error]="form.get('material')?.touched && form.get('material')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('material')?.touched && form.get('material')?.invalid">
+              Material description is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Category *</span>
+            <select 
+              formControlName="category"
+              [class.error]="form.get('category')?.touched && form.get('category')?.invalid"
+            >
+              <option value="" disabled>Select category</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category | titlecase }}
+              </option>
+            </select>
+            <span class="field-error" *ngIf="form.get('category')?.touched && form.get('category')?.invalid">
+              Category is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Quantity (tons) *</span>
+            <input 
+              type="number" 
+              formControlName="quantityTons" 
+              min="1"
+              placeholder="Enter quantity"
+              [class.error]="form.get('quantityTons')?.touched && form.get('quantityTons')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('quantityTons')?.touched && form.get('quantityTons')?.invalid">
+              Valid quantity is required (minimum 1 ton)
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Price per Ton (TND) *</span>
+            <input 
+              type="number" 
+              formControlName="pricePerTon" 
+              min="0"
+              placeholder="Enter price"
+              [class.error]="form.get('pricePerTon')?.touched && form.get('pricePerTon')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('pricePerTon')?.touched && form.get('pricePerTon')?.invalid">
+              Price is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Location *</span>
+            <input 
+              formControlName="location" 
+              placeholder="City, Tunisia"
+              [class.error]="form.get('location')?.touched && form.get('location')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('location')?.touched && form.get('location')?.invalid">
+              Location is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Available From *</span>
+            <input 
+              type="date" 
+              formControlName="availableFrom"
+              [class.error]="form.get('availableFrom')?.touched && form.get('availableFrom')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('availableFrom')?.touched && form.get('availableFrom')?.invalid">
+              Available date is required
+            </span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Expires On *</span>
+            <input 
+              type="date" 
+              formControlName="expiresOn"
+              [class.error]="form.get('expiresOn')?.touched && form.get('expiresOn')?.invalid"
+            />
+            <span class="field-error" *ngIf="form.get('expiresOn')?.touched && form.get('expiresOn')?.invalid">
+              Expiry date is required
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Additional Details</h2>
+        <p class="section-description">Provide pickup requirements and other important information</p>
+      </div>
+
+      <div class="form-group full-width">
+        <label>
+          <span>Pickup Requirements</span>
+          <textarea
+            formControlName="pickupRequirements"
+            rows="4"
+            placeholder="e.g. Forklift access required, PPE needed, hazmat licensing required..."
+          ></textarea>
+          <small class="field-hint">Describe any special requirements for pickup or transport</small>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Main Photo</h2>
+        <p class="section-description">Upload the main photo that will appear on your listing</p>
+      </div>
+
+      <div class="form-group full-width">
+        <label class="main-photo-upload">
+          <input 
+            type="file" 
+            (change)="onMainPhotoSelect($event)" 
+            accept=".jpg,.jpeg,.png,.webp"
+            style="display: none;"
+            #mainPhotoInput
+          />
+          <div class="photo-upload-area" 
+               [class.has-photo]="mainPhotoPreview" 
+               [class.uploading]="mainPhotoUploading"
+               (click)="!mainPhotoPreview && mainPhotoInput.click()"
+          >
+            <div class="photo-preview" *ngIf="mainPhotoPreview" (click)="$event.stopPropagation()">
+              <img [src]="mainPhotoPreview" alt="Main photo preview" />
+              <button type="button" class="remove-photo" (click)="removeMainPhoto(); $event.stopPropagation()" title="Remove photo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+              <div class="upload-progress-overlay" *ngIf="mainPhotoUploading">
+                <div class="progress-spinner"></div>
+                <span>{{ mainPhotoProgress }}%</span>
+              </div>
+            </div>
+            <div class="photo-upload-placeholder" *ngIf="!mainPhotoPreview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Click to upload main photo</span>
+              <small>JPG, PNG, WEBP up to 10MB</small>
+            </div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-header">
+        <h2>Additional Documents & Photos</h2>
+        <p class="section-description">Upload additional photos, analysis reports, safety sheets, and other documents</p>
+      </div>
+
+      <div class="form-group full-width">
+        <label class="file-upload-label">
+          <span>Upload Additional Files</span>
+          <input 
+            type="file" 
+            (change)="onDocumentSelect($event)" 
+            multiple 
+            accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+          />
+          <div class="file-upload-hint">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span>Click to upload or drag and drop</span>
+            <small>PDF, JPG, PNG, DOC, DOCX up to 10MB each</small>
+          </div>
+        </label>
+
+        <div class="uploads-list" *ngIf="additionalUploads.length > 0">
+          <div class="upload-item" *ngFor="let upload of additionalUploads">
+            <div class="upload-info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+              </svg>
+              <span>{{ upload.fileName }}</span>
+            </div>
+            <div class="upload-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="upload.progress"></div>
+              </div>
+              <span class="progress-text">{{ upload.progress | number: '1.0-0' }}%</span>
+              <span class="upload-status" *ngIf="upload.completed">✓</span>
+              <button type="button" class="remove-upload" *ngIf="upload.completed" (click)="removeUpload(upload.fileName)" title="Remove">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="submit-button" [disabled]="form.invalid || pending">
+        <span *ngIf="!pending">Publish Listing</span>
+        <span *ngIf="pending">Publishing...</span>
+      </button>
+      <p class="status-message" *ngIf="submissionMessage">{{ submissionMessage }}</p>
+    </div>
+  </form>
+</section>

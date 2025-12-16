@@ -1,0 +1,25 @@
+<article class="stat-card card" role="region" [attr.aria-label]="label + ' statistic'">
+  <div class="stat-header">
+    <p class="label" [attr.aria-label]="label">{{ label }}</p>
+    <div class="trend-indicator" *ngIf="delta" [class.positive]="positive" [class.negative]="!positive">
+      <svg *ngIf="positive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+      <svg *ngIf="!positive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+  <p class="value">{{ value }}</p>
+  <p class="delta" *ngIf="delta" [class.positive]="positive" [class.negative]="!positive">
+    <span class="delta-icon">
+      <svg *ngIf="positive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="18 15 12 9 6 15"/>
+      </svg>
+      <svg *ngIf="!positive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </span>
+    {{ delta }}
+  </p>
+</article>

@@ -1,0 +1,104 @@
+<section class="analytics-page">
+  <div class="page-header">
+    <h1>Analytics</h1>
+    <p class="subtitle">Track your environmental impact and business performance</p>
+  </div>
+
+  <div class="kpi-section">
+    <div class="kpi-grid" *ngIf="kpis$ | async as kpis">
+      <app-stat-card
+        *ngFor="let stat of kpis"
+        [label]="stat.label"
+        [value]="stat.value"
+        [delta]="stat.delta"
+        [positive]="stat.positive"
+      />
+    </div>
+  </div>
+
+  <div class="analytics-content">
+    <div class="content-main">
+      <section class="impact-section card">
+        <div class="section-header">
+          <h2>Environmental Impact</h2>
+          <p class="section-description">Your contribution to circular economy</p>
+        </div>
+        <div class="impact-grid" *ngIf="impactMetrics$ | async as metrics">
+          <app-impact-metric *ngFor="let metric of metrics" [metric]="metric" />
+        </div>
+      </section>
+
+    </div>
+
+    <aside class="calculator-section card">
+      <div class="section-header">
+        <h2>Impact Calculator</h2>
+        <p class="section-description">Estimate environmental savings</p>
+      </div>
+      <form [formGroup]="calculatorForm" (ngSubmit)="calculate()" class="calculator-form">
+        <div class="form-group">
+          <label>
+            <span>Material Type</span>
+            <select formControlName="material">
+              <option value="metals">Metals</option>
+              <option value="plastics">Plastics</option>
+              <option value="chemicals">Chemicals</option>
+              <option value="organics">Organics</option>
+              <option value="construction">Construction</option>
+              <option value="textiles">Textiles</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Tons Diverted</span>
+            <input type="number" formControlName="tons" min="1" placeholder="Enter tons" />
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Transport Distance (km)</span>
+            <input type="number" formControlName="distanceKm" min="1" placeholder="Enter distance" />
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <span>Recycling Method</span>
+            <select formControlName="recyclingMethod">
+              <option value="reuse">Reuse</option>
+              <option value="remanufacture">Remanufacture</option>
+              <option value="energy-recovery">Energy Recovery</option>
+            </select>
+          </label>
+        </div>
+
+        <button type="submit" class="calculate-button" [disabled]="calculatorForm.invalid">
+          Calculate Impact
+        </button>
+      </form>
+
+      <div class="calculator-result" *ngIf="calculatorResult">
+        <div class="result-header">
+          <h3>Estimated Savings</h3>
+        </div>
+        <div class="result-metrics">
+          <div class="result-item">
+            <span class="result-label">CO₂ Saved</span>
+            <span class="result-value">{{ calculatorResult.co2Saved }} t</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">Waste Diverted</span>
+            <span class="result-value">{{ calculatorResult.wasteDiverted }} t</span>
+          </div>
+          <div class="result-item">
+            <span class="result-label">Energy Preserved</span>
+            <span class="result-value">{{ calculatorResult.energySaved }} MWh</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>

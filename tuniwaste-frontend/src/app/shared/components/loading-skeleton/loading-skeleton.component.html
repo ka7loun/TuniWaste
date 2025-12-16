@@ -1,0 +1,23 @@
+<div class="skeleton" [class]="'skeleton-' + type" [style.width]="width" [style.height]="height" *ngFor="let item of getArray(count); let i = index">
+  <ng-container [ngSwitch]="type">
+    <div *ngSwitchCase="'text'" class="skeleton-text">
+      <div class="skeleton-line" *ngFor="let line of getArray(lines); let j = index" 
+           [style.width.%]="j === lines - 1 ? 80 : 100"></div>
+    </div>
+    <div *ngSwitchCase="'card'" class="skeleton-card">
+      <div class="skeleton-image"></div>
+      <div class="skeleton-content">
+        <div class="skeleton-line" style="width: 60%"></div>
+        <div class="skeleton-line" style="width: 100%"></div>
+        <div class="skeleton-line" style="width: 80%"></div>
+      </div>
+    </div>
+    <div *ngSwitchCase="'list'" class="skeleton-list">
+      <div class="skeleton-line" *ngFor="let line of getArray(lines); let j = index" 
+           [style.width.%]="j === lines - 1 ? 70 : 100"></div>
+    </div>
+    <div *ngSwitchCase="'circle'" class="skeleton-circle"></div>
+    <div *ngSwitchCase="'image'" class="skeleton-image"></div>
+  </ng-container>
+</div>
+

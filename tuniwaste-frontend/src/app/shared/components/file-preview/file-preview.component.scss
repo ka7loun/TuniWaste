@@ -1,0 +1,78 @@
+@use '../../../../styles/colors' as *;
+@use '../../../../styles/mixins' as *;
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--tw-bg);
+  border: 1px solid var(--tw-border);
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--tw-text);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--tw-bg-hover);
+    border-color: var(--tw-emerald);
+  }
+
+  .file-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .file-name {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--tw-text);
+  }
+
+  .download-link {
+    color: var(--tw-emerald);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: var(--tw-hover);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+  }
+
+  .remove-button {
+    background: none;
+    border: none;
+    color: var(--tw-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: var(--tw-error);
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+  }
+}

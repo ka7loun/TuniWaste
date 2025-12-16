@@ -1,0 +1,41 @@
+<article class="listing-card card" [class.reserved]="listing.status === 'reserved'" [class.awarded]="listing.status === 'awarded'" (click)="selectListing.emit(listing)" role="article" [attr.aria-label]="listing.title">
+  <div class="image-wrapper">
+    <img 
+      [src]="listing.thumbnail || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='" 
+      [alt]="listing.title + ' - ' + listing.material" 
+      loading="lazy"
+      (error)="onImageError($event)"
+      (load)="onImageLoad()"
+      crossorigin="anonymous"
+    />
+    <div class="status-overlay" *ngIf="listing.status !== 'open'">
+      <span class="status-badge" [ngClass]="'status-' + listing.status">
+        {{ listing.status === 'reserved' ? 'Reserved' : listing.status === 'awarded' ? 'Awarded' : listing.status }}
+      </span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="header">
+      <p class="pill">{{ listing.category | titlecase }}</p>
+      <span class="status" [ngClass]="listing.status">{{ listing.status }}</span>
+    </div>
+    <h3>{{ listing.title }}</h3>
+    <p class="meta">
+      {{ listing.quantityTons }} t · {{ listing.availableFrom |
+      date : 'MMM d' }}
+    </p>
+    <div class="details">
+      <div>
+        <small>Price/ton</small>
+        <strong>{{ listing.pricePerTon | currency : 'TND' }}</strong>
+      </div>
+    </div>
+    <div class="reserved-notice" *ngIf="listing.status === 'reserved'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <path d="M9 12l2 2 4-4"/>
+      </svg>
+      <span>This listing has been reserved</span>
+    </div>
+  </div>
+</article>

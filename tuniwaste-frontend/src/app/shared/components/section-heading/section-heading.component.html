@@ -1,0 +1,23 @@
+<div class="section-heading">
+  <div>
+    <p class="eyebrow" *ngIf="eyebrow">{{ eyebrow }}</p>
+    <h2>
+      {{ title }}
+      <span class="highlight" *ngIf="highlight">{{ highlight }}</span>
+    </h2>
+    <p class="description" *ngIf="description">{{ description }}</p>
+  </div>
+
+  <div class="actions" *ngIf="actions.length">
+    <a
+      *ngFor="let action of actions"
+      [routerLink]="action.routerLink || null"
+      [attr.href]="action.externalLink || null"
+      [class.primary]="action.variant === 'primary'"
+      [class.ghost]="action.variant !== 'primary'"
+      [attr.target]="action.externalLink ? '_blank' : null"
+      [attr.rel]="action.externalLink ? 'noopener' : null"
+      >{{ action.label }}</a
+    >
+  </div>
+</div>

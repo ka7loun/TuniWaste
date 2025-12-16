@@ -1,0 +1,128 @@
+<header class="top-nav" [class.mobile-open]="mobileMenuOpen">
+  <div class="brand">
+    <a routerLink="/" class="logo">
+      <img src="assets/tunilogo.png" alt="TuniWaste" class="logo-img" />
+    </a>
+  </div>
+
+  <nav class="nav-links" *ngIf="(isAuthenticated$ | async) && links" role="navigation" aria-label="Main navigation">
+    <a
+      *ngFor="let link of links"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      [attr.aria-current]="link.path === router.url ? 'page' : null"
+      >{{ link.label }}</a
+    >
+  </nav>
+
+  <div class="actions">
+    <ng-container *ngIf="isAuthenticated$ | async">
+      <div class="notification-container">
+        <button class="icon-button" aria-label="Notifications" (click)="toggleNotificationMenu()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <ng-container *ngIf="unreadCount$ | async as unread">
+            <span class="badge" *ngIf="unread > 0">{{ unread }}</span>
+          </ng-container>
+        </button>
+        <div class="notification-dropdown" [class.open]="notificationMenuOpen">
+          <div class="dropdown-header">
+            <h3>Notifications</h3>
+          </div>
+          <div class="dropdown-content">
+            <ng-container *ngIf="notifications$ | async as notifications">
+              <div *ngIf="notifications.length === 0" class="empty-state">
+                <p>No new notifications</p>
+              </div>
+              <div 
+                class="notification-item" 
+                *ngFor="let item of notifications" 
+                [class.unread]="!item.read"
+                (click)="markAsRead(item)"
+              >
+                <div class="dot"></div>
+                <div class="content">
+                  <p class="title">{{ item.title }}</p>
+                  <p class="detail">{{ item.detail }}</p>
+                  <span class="time">{{ item.timestamp | date:'shortTime' }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <a 
+        *ngIf="(userRole$ | async) === 'generator'" 
+        routerLink="/listings/create" 
+        class="primary" 
+        (click)="closeMenu()"
+        >List Waste</a
+      >
+      <div class="user-menu">
+        <button class="user-button" (click)="closeMenu()">
+          <span *ngIf="user$ | async as user">{{ user.company }}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </button>
+        <div class="user-dropdown">
+          <a routerLink="/profile" (click)="closeMenu()">Profile</a>
+          <a routerLink="/analytics" (click)="closeMenu()">Analytics</a>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </ng-container>
+    <a *ngIf="!(isAuthenticated$ | async)" routerLink="/auth" class="ghost" (click)="closeMenu()">Sign in</a>
+  </div>
+
+  <button class="menu-toggle" (click)="toggleMenu()" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-nav" id="mobile-nav" *ngIf="mobileMenuOpen" role="navigation" [attr.aria-hidden]="!mobileMenuOpen">
+  <div class="mobile-links" *ngIf="(isAuthenticated$ | async) && links">
+    <a
+      *ngFor="let link of links"
+      [routerLink]="link.path"
+      routerLinkActive="active"
+      (click)="closeMenu()"
+      >{{ link.label }}</a
+    >
+  </div>
+  <div class="mobile-actions">
+    <ng-container *ngIf="isAuthenticated$ | async">
+      <a routerLink="/messaging" class="icon-button mobile-icon" aria-label="Messages">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <ng-container *ngIf="unreadCount$ | async as unread">
+          <span class="badge" *ngIf="unread > 0">{{ unread }}</span>
+        </ng-container>
+      </a>
+      <a 
+        *ngIf="(userRole$ | async) === 'generator'" 
+        routerLink="/listings/create" 
+        class="primary" 
+        (click)="closeMenu()"
+        >List Waste</a
+      >
+      <div class="mobile-user-info" *ngIf="user$ | async as user">
+        <div class="mobile-user-details">
+          <strong>{{ user.company }}</strong>
+          <small>{{ user.role === 'generator' ? 'Seller' : 'Buyer' }}</small>
+        </div>
+        <div class="mobile-user-links">
+          <a routerLink="/profile" (click)="closeMenu()">Profile</a>
+          <a routerLink="/analytics" (click)="closeMenu()">Analytics</a>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </ng-container>
+    <a *ngIf="!(isAuthenticated$ | async)" routerLink="/auth" class="ghost" (click)="closeMenu()">Sign in</a>
+  </div>
+</div>

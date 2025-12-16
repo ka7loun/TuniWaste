@@ -1,0 +1,111 @@
+<div class="users-container">
+  <div class="page-header">
+    <h2>User Management</h2>
+  </div>
+
+  <div class="filters-section">
+    <div class="filter-group">
+      <label>Role:</label>
+      <select [(ngModel)]="filters.role" (change)="applyFilters()">
+        <option value="">All Roles</option>
+        <option value="generator">Generator</option>
+        <option value="buyer">Buyer</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Verified:</label>
+      <select [(ngModel)]="filters.verified" (change)="applyFilters()">
+        <option value="">All</option>
+        <option value="true">Verified</option>
+        <option value="false">Unverified</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>Search:</label>
+      <input
+        type="text"
+        [(ngModel)]="filters.search"
+        placeholder="Email, company, contact..."
+        (keyup.enter)="applyFilters()"
+      />
+    </div>
+
+    <button class="btn-primary" (click)="applyFilters()">Apply Filters</button>
+    <button class="btn-secondary" (click)="clearFilters()">Clear</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading users...</div>
+
+  <div *ngIf="!loading" class="users-table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Company</th>
+          <th>Contact</th>
+          <th>Role</th>
+          <th>Verified</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.email }}</td>
+          <td>{{ user.company }}</td>
+          <td>{{ user.contact }}</td>
+          <td>
+            <span class="badge" [ngClass]="getRoleBadgeClass(user.role)">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="user.verified ? 'badge-success' : 'badge-warning'">
+              {{ user.verified ? 'Yes' : 'No' }}
+            </span>
+          </td>
+          <td>{{ user.createdAt | date: 'short' }}</td>
+          <td class="actions">
+            <button
+              class="btn-small"
+              [ngClass]="user.verified ? 'btn-warning' : 'btn-success'"
+              (click)="toggleVerification(user)"
+            >
+              {{ user.verified ? 'Unverify' : 'Verify' }}
+            </button>
+            <button
+              class="btn-small btn-danger"
+              (click)="deleteUser(user)"
+              [disabled]="user.role === 'admin'"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="users.length === 0" class="empty-state">No users found</div>
+
+    <div *ngIf="pagination.pages > 1" class="pagination">
+      <button
+        [disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)"
+      >
+        Previous
+      </button>
+      <span>
+        Page {{ currentPage }} of {{ pagination.pages }} ({{ pagination.total }} total)
+      </span>
+      <button
+        [disabled]="currentPage === pagination.pages"
+        (click)="changePage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<div class="analytics-container">
+  <div class="page-header">
+    <h2>Analytics & Reports</h2>
+    <div class="time-range-selector">
+      <button
+        *ngFor="let period of [6, 12, 24]"
+        [class.active]="months === period"
+        (click)="changeMonths(period)"
+      >
+        Last {{ period }} Months
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading analytics...</div>
+
+  <div *ngIf="!loading && analytics" class="analytics-content">
+    <!-- Category Distribution -->
+    <div class="analytics-section">
+      <h3>Category Distribution</h3>
+      <div class="category-list">
+        <div *ngFor="let cat of analytics.categoryDistribution" class="category-item">
+          <div class="category-header">
+            <span class="category-name">{{ cat._id }}</span>
+            <span class="category-count">{{ cat.count }} listings</span>
+          </div>
+          <div class="category-stats">
+            <span>Total Quantity: {{ cat.totalQuantity | number }} tons</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Sellers -->
+    <div class="analytics-section">
+      <h3>Top Sellers</h3>
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Listings</th>
+            <th>Total Quantity (tons)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let seller of analytics.topSellers; let i = index">
+            <td>#{{ i + 1 }}</td>
+            <td>{{ seller.company }}</td>
+            <td>{{ seller.email }}</td>
+            <td>{{ seller.listingCount }}</td>
+            <td>{{ seller.totalQuantity | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Top Buyers -->
+    <div class="analytics-section">
+      <h3>Top Buyers</h3>
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Company</th>
+            <th>Email</th>
+            <th>Transactions</th>
+            <th>Total Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let buyer of analytics.topBuyers; let i = index">
+            <td>#{{ i + 1 }}</td>
+            <td>{{ buyer.company }}</td>
+            <td>{{ buyer.email }}</td>
+            <td>{{ buyer.transactionCount }}</td>
+            <td>${{ buyer.totalValue | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

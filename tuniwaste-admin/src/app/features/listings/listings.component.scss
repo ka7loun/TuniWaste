@@ -1,0 +1,18 @@
+@import '../users/users.component.scss';
+
+.listings-container {
+  @extend .users-container;
+}
+
+.listings-table-container {
+  @extend .users-table-container;
+}
+
+.listings-table {
+  @extend .users-table;
+
+  .badge-info {
+    background: #bee3f8;
+    color: #2c5282;
+  }
+}

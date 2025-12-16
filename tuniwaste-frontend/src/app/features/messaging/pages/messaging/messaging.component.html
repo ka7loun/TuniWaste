@@ -1,0 +1,150 @@
+<section class="messaging-page">
+  <div class="page-header">
+    <h1>Messages</h1>
+    <p class="subtitle">Communicate securely with buyers and sellers</p>
+  </div>
+
+  <!-- Warning Dialog -->
+  <div class="warning-dialog-overlay" *ngIf="showWarningDialog" (click)="dismissWarning()">
+    <div class="warning-dialog" (click)="$event.stopPropagation()">
+      <div class="warning-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+        </svg>
+        <h2>Important: Anonymous Communication</h2>
+      </div>
+      <div class="warning-content">
+        <p><strong>Please read carefully before proceeding:</strong></p>
+        <ul>
+          <li>All communication on this platform is <strong>anonymous</strong></li>
+          <li><strong>DO NOT</strong> share your name, company name, or personal contact information</li>
+          <li><strong>DO NOT</strong> ask others for their personal details or company information</li>
+          <li>The purpose of messaging is <strong>only</strong> to ask questions about listings and proceed with transactions</li>
+          <li>Identity information is hidden to protect privacy - only administrators can see full details</li>
+        </ul>
+        <p class="warning-note">By clicking "I Understand", you agree to maintain anonymity and use messaging only for its intended purpose.</p>
+      </div>
+      <div class="warning-actions">
+        <button class="btn-secondary" (click)="dismissWarning()">Cancel</button>
+        <button class="btn-primary" (click)="acceptWarning()">I Understand</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="messaging-layout">
+    <aside class="threads-panel">
+      <div class="panel-header">
+        <h2>Conversations</h2>
+      </div>
+      <div class="threads-list" *ngIf="!loading">
+        <div *ngIf="threads.length === 0" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <p>No conversations yet</p>
+        </div>
+        <div 
+          class="thread-item" 
+          *ngFor="let thread of threads"
+          [class.active]="selectedThreadId.value === thread.id"
+          (click)="selectThread(thread.id)"
+        >
+          <div class="thread-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="thread-content">
+            <div class="thread-header">
+              <strong>{{ thread.counterpart }}</strong>
+              <span class="unread-badge" *ngIf="thread.unread > 0">{{ thread.unread }}</span>
+            </div>
+            <p class="thread-preview">{{ thread.lastMessage || 'No messages yet' }}</p>
+            <small class="thread-time">{{ thread.lastTimestamp | date: 'short' }}</small>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading conversations...</p>
+      </div>
+    </aside>
+
+    <div class="conversation-panel" *ngIf="selectedThreadId.value && selectedThread">
+      <div class="conversation-header">
+        <div class="conversation-info">
+          <h2>{{ selectedThread.counterpart }}</h2>
+        </div>
+      </div>
+
+      <div class="messages-container">
+        <div *ngIf="loadingMessages" class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading messages...</p>
+        </div>
+        <div *ngIf="!loadingMessages && messages.length === 0" class="empty-conversation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <p>No messages yet. Start the conversation!</p>
+        </div>
+        <div class="messages-list" *ngIf="!loadingMessages && messages.length > 0">
+          <div 
+            *ngFor="let message of messages" 
+            class="message-item"
+            [class.sent]="message.sender === 'You'"
+            [class.received]="message.sender !== 'You'"
+          >
+            <div class="message-avatar" *ngIf="message.sender !== 'You'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <div class="message-content">
+              <div class="message-header">
+                <strong>{{ message.sender }}</strong>
+                <small>{{ message.timestamp | date: 'short' }}</small>
+              </div>
+              <p class="message-body">{{ message.body }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form class="message-composer" (ngSubmit)="sendMessage($event)">
+        <textarea
+          [formControl]="composer"
+          placeholder="Type your message..."
+          rows="3"
+          [disabled]="sending"
+          (keydown.enter)="$event.preventDefault(); sendMessage($event)"
+        ></textarea>
+        <button 
+          type="submit" 
+          class="send-button" 
+          [disabled]="sending || composer.invalid || !selectedThreadId.value"
+          (click)="sendMessage($event)"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" *ngIf="!sending">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          <div class="spinner-small" *ngIf="sending"></div>
+          <span>{{ sending ? 'Sending...' : 'Send' }}</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="no-selection" *ngIf="!selectedThreadId.value">
+      <div class="empty-content">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <h3>Select a conversation</h3>
+        <p>Choose a conversation from the list to start messaging</p>
+      </div>
+    </div>
+  </div>
+</section>
